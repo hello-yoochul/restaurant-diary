@@ -113,5 +113,9 @@ public class DB {
 		}
 		return new Menu(menuAndPriceMap);
 	}
+
+	public Set<Restaurant> getData() {
+		return restaurantTableSet;
+	}
 }
 
