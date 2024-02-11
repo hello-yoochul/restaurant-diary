@@ -3,6 +3,7 @@ package com.yoochul.restaurantnote.model;
 import java.util.Arrays;
 
 public enum FoodType {
+	ALL("ALL"),
 	WESTURN("양식"), 
 	CHINSESE("중식"), 
 	JAPANESE("일식"), 
