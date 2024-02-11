@@ -21,6 +21,7 @@ import com.yoochul.restaurantnote.db.DB;
 import com.yoochul.restaurantnote.model.FoodType;
 import com.yoochul.restaurantnote.model.Restaurant;
 import com.yoochul.restaurantnote.util.StringUtil;
+import com.yoochul.restaurantnote.view.TopLeftView;
 
 public class SearchableRestaurantTableViewerComposite extends Composite {
 	private final DB database = DB.getInstance();
@@ -35,8 +36,11 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
     
 	private TableViewer tableViewer;
 	
-	public SearchableRestaurantTableViewerComposite(Composite parent, int style) {
+	private TopLeftView topLeftView;
+	
+	public SearchableRestaurantTableViewerComposite(Composite parent, int style, TopLeftView topLeftView) {
         super(parent, style); 
+        this.topLeftView = topLeftView;
     	setLayout(new GridLayout());
     	setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         fillComposite();
@@ -57,7 +61,8 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
     	foodTypeCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                tableViewer.refresh();
+                topLeftView.syncFoodType(foodTypeCombo.getSelectionIndex());
+				updateTable();
             }
         });
 	}
@@ -70,9 +75,14 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
         searchText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                tableViewer.refresh();
+                updateTable();
             }
         });
+	}
+	
+	public void updateTable() {
+		// TODO Auto-generated method stub
+		tableViewer.refresh();
 	}
 
 	private void createTable() {
@@ -155,5 +165,10 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
 					|| restaurant.getAddress().toLowerCase().contains(searchString.toLowerCase())
 					|| restaurant.getNote().toLowerCase().contains(searchString.toLowerCase());
 		}
-    }
+	}
+
+	public void syncFoodType(int index) {
+		// TODO: index 유효한 범위 체크 
+		foodTypeCombo.select(index);
+	}
 }

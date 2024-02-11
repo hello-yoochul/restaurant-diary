@@ -5,11 +5,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import com.yoochul.restaurantnote.composite.RestaurantCategorySelection;
 import com.yoochul.restaurantnote.composite.SearchableRestaurantTableViewerComposite;
 
 public class TopLeftView extends ViewPart {
 	public static final String ID = "com.yoochul.restaurantnote.view.topleftview";
 	
+	private RestaurantCategorySelection topComposite;
+
 	private SearchableRestaurantTableViewerComposite bottomComposite;
     
 	@Override
@@ -23,6 +26,17 @@ public class TopLeftView extends ViewPart {
 	
 	private void fillComposite(Composite parent) {
 		parent.setLayout(new GridLayout(1, true));
-		bottomComposite = new SearchableRestaurantTableViewerComposite(parent, SWT.BORDER);
+		topComposite = new RestaurantCategorySelection(parent, SWT.BORDER, this);
+		bottomComposite = new SearchableRestaurantTableViewerComposite(parent, SWT.BORDER, this);
     }
+	
+	public void syncFoodType(int index){ // TODO: index 말고 FoodType 으로 변경하고, index를 쓸거면 범위 체크하기 
+		if (index == -1) return;
+		topComposite.syncFoodType(index);
+		bottomComposite.syncFoodType(index);
+	}
+
+	public void refreshTable() {
+		bottomComposite.updateTable();
+	}
 }
