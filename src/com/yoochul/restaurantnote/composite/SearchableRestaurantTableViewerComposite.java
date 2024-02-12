@@ -1,5 +1,8 @@
 package com.yoochul.restaurantnote.composite;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -108,6 +111,20 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
                 return id1.compareTo(id2);
             };
         });
+        
+        tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				
+				if (!selection.isEmpty()) {
+					Restaurant selected = (Restaurant) selection.getFirstElement();
+                    // 선택된 항목의 데이터를 아래 Composite의 Label에 설정
+                    //selectedDataLabel.setText("Selected Data: " + selected.getName());
+					topLeftView.propagateSelection(selected);
+				}
+			}
+		});
 	}
 
 	private void createTableColumns(Table table) {

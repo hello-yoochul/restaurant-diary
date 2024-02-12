@@ -7,6 +7,8 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.yoochul.restaurantnote.composite.RestaurantCategorySelection;
 import com.yoochul.restaurantnote.composite.SearchableRestaurantTableViewerComposite;
+import com.yoochul.restaurantnote.controller.TableSelectionManager;
+import com.yoochul.restaurantnote.model.Restaurant;
 
 public class TopLeftView extends ViewPart {
 	public static final String ID = "com.yoochul.restaurantnote.view.topleftview";
@@ -14,9 +16,12 @@ public class TopLeftView extends ViewPart {
 	private RestaurantCategorySelection topComposite;
 
 	private SearchableRestaurantTableViewerComposite bottomComposite;
+	
+	private TableSelectionManager tableSelectionManager;
     
 	@Override
 	public void createPartControl(Composite parent) {
+		tableSelectionManager = TableSelectionManager.getInstance();
 		fillComposite(parent);
 	}
 
@@ -38,5 +43,9 @@ public class TopLeftView extends ViewPart {
 
 	public void refreshTable() {
 		bottomComposite.updateTable();
+	}
+	
+	public void propagateSelection(Restaurant restaurant) {
+		tableSelectionManager.propagateTableSelection(restaurant);
 	}
 }

@@ -50,7 +50,7 @@ public class DB {
 		createDummyMapSearchTerm();
 		for (int i = 0; i < 30; i++) {
 			Restaurant restaurantToAdd = createDummyRestaurant(i, random);
-			System.out.println("식당 생성 완료: " + restaurantToAdd.toLiteString());
+			//System.out.println("식당 생성 완료: " + restaurantToAdd.toLiteString());
 			restaurantTableSet.add(restaurantToAdd);
 		}
 	}
@@ -99,7 +99,7 @@ public class DB {
 	 * 사진을 넣어둔 임시 4개 폴더를 랜덤으로 배정.
 	 */
 	private String createRandomPicLocation() {
-		return "resources/" + (random.nextInt(4) + 1);
+		return "C:\\Users\\yoochul\\Eclipse\\workspaces\\workspace-for-restaurant-app\\com.yoochul.restaurantnote\\resources\\" + (random.nextInt(4) + 1);
 	}
 
 	/**
