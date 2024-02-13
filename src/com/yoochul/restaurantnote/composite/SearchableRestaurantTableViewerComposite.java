@@ -1,5 +1,8 @@
 package com.yoochul.restaurantnote.composite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -7,6 +10,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -14,6 +18,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -21,6 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.yoochul.restaurantnote.db.DB;
+import com.yoochul.restaurantnote.dialog.AddRestaurantDialog;
 import com.yoochul.restaurantnote.model.FoodType;
 import com.yoochul.restaurantnote.model.Restaurant;
 import com.yoochul.restaurantnote.util.StringUtil;
@@ -53,6 +59,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
         createFoodTypeComboBox();
         createSearchBox();
         createTable();
+        createAddAndDeleteButtons();
 	}
 
 	private void createFoodTypeComboBox() {
@@ -189,4 +196,61 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
 		// TODO: index 유효한 범위 체크 
 		foodTypeCombo.select(index);
 	}
+	
+	private void createAddAndDeleteButtons() {
+        Composite buttonComposite = new Composite(this, SWT.NONE);
+        buttonComposite.setLayout(new GridLayout(2, false));
+        buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+
+        Button addButton = new Button(buttonComposite, SWT.PUSH);
+        addButton.setText("맛집 추가");
+        addButton.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));
+        
+        addButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                AddRestaurantDialog dialog = new AddRestaurantDialog(getShell());
+                
+                if (dialog.open() == Window.OK) {
+                    String name = dialog.getName();
+                    FoodType type = FoodType.getByName(dialog.getType());
+                    String note = dialog.getNote();
+                    
+                    Restaurant restaurant = new Restaurant.Builder()
+                        .name(name == null ? "" : name)
+                        .type(type)
+                        .note(note == null ? "" : note)
+                        .build();
+                    
+                    database.add(restaurant);
+                    
+                    updateTable();
+                }
+            }
+        });
+        
+        
+        Button deleteButton = new Button(buttonComposite, SWT.PUSH);
+        deleteButton.setText("삭제");
+        deleteButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+            	Object[] selectedItems = selection.toArray();
+            	List<Restaurant> selectedRestaurants = new ArrayList<Restaurant>();
+            	
+            	for (Object selectedItem : selectedItems) {
+            	    if (selectedItem instanceof Restaurant) {
+            	        Restaurant restaurant = (Restaurant) selectedItem;
+            	        selectedRestaurants.add(restaurant);
+            	    }
+            	}
+            	
+            	database.delete(selectedRestaurants);
+            	
+            	updateTable();
+            	topLeftView.propagateSelection(null);
+            }
+        });
+	}	
 }
