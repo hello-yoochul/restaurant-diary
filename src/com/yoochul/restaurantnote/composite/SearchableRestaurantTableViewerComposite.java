@@ -31,7 +31,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
 	
 	private static final String[] columnNames = { "No.", "Name", "Type", "Address", "Note" };
 	
-	private static final int[] columnWidths = { 50, 100, 100, 200, 400 };
+	private static final int[] columnWidths = { 50, 150, 100, 220, 400 };
 	
     private Combo foodTypeCombo;
 

@@ -14,7 +14,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);
 
 		layout.addView(BottomView.ID, IPageLayout.BOTTOM, 0.7f, editorArea);
-		layout.addView(TopLeftView.ID, IPageLayout.LEFT, 0.5f, editorArea);
+		layout.addView(TopLeftView.ID, IPageLayout.LEFT, 0.6f, editorArea);
 		layout.addView(TopRightView.ID, IPageLayout.RIGHT, 0.5f, editorArea);
 		layout.getViewLayout(BottomView.ID).setCloseable(false);
 		layout.getViewLayout(TopLeftView.ID).setCloseable(false);
