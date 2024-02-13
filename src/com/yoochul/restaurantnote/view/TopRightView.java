@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -32,7 +33,7 @@ public class TopRightView extends ViewPart {
 	private Composite parentComposite;
 	private Composite topComposite;
 	private ScrolledComposite bottomScrolledComposite;
-	private Label topLabel;
+	private CLabel topLabel;
     
 	@Override
 	public void createPartControl(Composite parent) {
@@ -44,11 +45,12 @@ public class TopRightView extends ViewPart {
 
 	private void createTop(Composite parent) {
 		topComposite = new Composite(parent, SWT.BORDER);
-	    topComposite.setLayout(new FillLayout(SWT.HORIZONTAL)); // 수평 방향으로 채워지도록 설정
-	    topComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false)); // 중앙에 위치하도록 설정
-	    
-	    topLabel = new Label(topComposite, SWT.CENTER | SWT.WRAP); // 수평 및 수직 중앙 정렬, 자동 줄 바꿈
-	    topLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		topComposite.setLayout(new GridLayout()); // 수평 방향으로 채워지도록 설정
+		
+		topLabel = new CLabel(topComposite, SWT.CENTER | SWT.UNDERLINE_SINGLE);
+		topLabel.setText("                                                                                                           ");
+		topLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
+		topLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 
 	    topLabel.addMouseListener(new MouseListener() {
 	        @Override

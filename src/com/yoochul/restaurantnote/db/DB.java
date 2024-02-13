@@ -1,7 +1,5 @@
 package com.yoochul.restaurantnote.db;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,13 +9,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Image;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
 import com.yoochul.restaurantnote.model.FoodType;
 import com.yoochul.restaurantnote.model.Menu;
@@ -84,7 +75,6 @@ public class DB {
 	 * 식당 30개 생성 
 	 */
 	private void loadDummyData() {
-		createDummyMapSearchTerm();
 		for (int i = 0; i < 30; i++) {
 			Restaurant restaurantToAdd = createDummyRestaurant(i, random);
 			//System.out.println("식당 생성 완료: " + restaurantToAdd.toLiteString());
@@ -92,20 +82,14 @@ public class DB {
 		}
 	}
 	
-	/**
-	 * 검색어를 생성
-	 */
-	private void createDummyMapSearchTerm() {
-		mapSearchTermList.addAll(Arrays.asList("판교 맛집", "야탑 맛집", "모란 맛집", "서현 맛집"));
-	}
-	
 	private Restaurant createDummyRestaurant(int dummyDataNumber, Random random) {
+		String name = getRandomName();
         return new Restaurant.Builder()
 				                .id(getNextUuid())
-				                .name(getRandomName())
+				                .name(name)
 				                .type(getRandomFoodType())
 				                .address(getRandomAddress())
-				                .mapUrl(getRandomMapUrl())
+				                .mapUrl(getMapUrl(name))
 				                .note(getRandomNote())
 				                .picturesLocation(createRandomPicLocation())
 				                .menu(createMenu(dummyDataNumber))
@@ -140,10 +124,10 @@ public class DB {
 	}
 	
 	/**
-	 * 식당 주소를 검색해야 하지만, 임시로 아무 사이트로 redirect용 URL 생성
+	 * 네이버 검색할 수 있게 base url 설정
 	 */
-	private String getRandomMapUrl() {
-		return "https://map.naver.com/p/search/" + mapSearchTermList.get(random.nextInt(mapSearchTermList.size()));
+	private String getMapUrl(String name) {
+		return "https://map.naver.com/p/search/" + name;
 	}
 
 	/**
