@@ -1,11 +1,12 @@
 package com.yoochul.restaurantnote.view;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import com.yoochul.restaurantnote.model.Restaurant;
 import com.yoochul.restaurantnote.util.StringUtil;
@@ -109,20 +111,62 @@ public class TopRightView extends ViewPart {
 	    
 	    // GridLayout 설정
 	    GridLayout layout = new GridLayout(IMAGE_NUMBER_PER_LINE, true);
+        layout.marginWidth = layout.marginHeight = 10;
 	    composite.setLayout(layout);
-				
-	    File directory = new File(imagePath);
+	    
+	    Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+		URL url = FileLocator.find(bundle, new Path(imagePath), null); //$NON-NLS-1$
+		URL fileUrl = null;
+		
+		try {
+			fileUrl = FileLocator.toFileURL(url);
+			File directory = new File(fileUrl.getPath());
+			File[] files = directory.listFiles();
+			
+			if (files != null) {
+				for (File file : files) {
+					if(file.isFile() && isImageFile(file.getName())){
+						Image originalImage = getImage(imagePath + file.getName());
+						if(originalImage == null) return;
+						
+		                int scaledWidth = 170;
+		                int scaledHeight = 140;
+		                Image scaledImage = new Image(parentComposite.getDisplay(), originalImage.getImageData().scaledTo(scaledWidth, scaledHeight));
+		                originalImage.dispose(); // 이미지 리소스 반환
+		                
+		                Label label = new Label(composite, SWT.NONE);
+		                label.setImage(scaledImage);
+		                
+		                GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		                gridData.widthHint = 150; // 이미지의 폭
+		                gridData.heightHint = 140; // 이미지의 높이
+		                label.setLayoutData(gridData);
+					}
+				}
+			}
+			
+		} catch (IOException e) {
+			System.out.println("파일 위치를 찾을 수 없습니다.");
+			e.printStackTrace();
+		}
+		
+		/*System.out.println("!@#!@$#@$#@$ url.getPath():   " + url.getPath());	    
+
+	    File directory = new File(fileUrl.getPath());
 
 		final File[] files = directory.listFiles();
 
 	    if (files != null) {
 	        for (File file : files) {
-	        	//System.out.println("file: " + file.getName());
+	        	System.out.println("file: " + file.getName());
 	            if (file.isFile() && isImageFile(file.getName())) {
 	                // 이미지 로드
-	                Image originalImage = new Image(parentComposite.getDisplay(), file.getAbsolutePath());
+	            	Image originalImage = getImage(imagePath + file.getName());
+	            	
+//	                Image originalImage = new Image(parentComposite.getDisplay(), file.getAbsolutePath());
+//	            	Image originalImage = ImageDescriptor.createFromURL(fileUrl)createImage();
 	                
-	                // TODO: 이미지 크기 조정 composite 사이즈에 맞게 조정, resize할때 조정되게 
+//	                // TODO: 이미지 크기 조정 composite 사이즈에 맞게 조정, resize할때 조정되게 
 	                int scaledWidth = 150;
 	                int scaledHeight = 130;
 	                Image scaledImage = new Image(parentComposite.getDisplay(), originalImage.getImageData().scaledTo(scaledWidth, scaledHeight));
@@ -139,13 +183,26 @@ public class TopRightView extends ViewPart {
 	                label.setLayoutData(gridData);
 	            }
 	        }
-	    }
+	    }*/
 	    bottomScrolledComposite.setContent(composite);
 	    
 	    // 스크롤 기능 활성화
 	    bottomScrolledComposite.setExpandHorizontal(true);
 	    bottomScrolledComposite.setExpandVertical(true);
 	    bottomScrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+	}
+	
+	private Image getImage(String imagePath){
+		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+		URL url = FileLocator.find(bundle, new Path(imagePath), null); //$NON-NLS-1$
+		try {
+			URL fileUrl = FileLocator.toFileURL(url);
+			ImageDescriptor descriptor = ImageDescriptor.createFromURL(fileUrl);
+			return descriptor.createImage();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	private static boolean isImageFile(String fileName) {
