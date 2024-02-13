@@ -66,6 +66,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
             public void widgetSelected(SelectionEvent e) {
                 topLeftView.syncFoodType(foodTypeCombo.getSelectionIndex());
 				updateTable();
+				topLeftView.propagateSelection(null);
             }
         });
 	}
