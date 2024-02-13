@@ -99,7 +99,7 @@ public class DB {
 	 * 사진을 넣어둔 임시 4개 폴더를 랜덤으로 배정.
 	 */
 	private String createRandomPicLocation() {
-		return "C:\\Users\\yoochul\\Eclipse\\workspaces\\workspace-for-restaurant-app\\com.yoochul.restaurantnote\\resources\\" + (random.nextInt(4) + 1);
+		return "C:\\Users\\sure\\dev\\ECLIPSE\\workspace2-others\\workspace-for-restaurant-app4\\com.yoochul.restaurantnote\\resources\\" + (random.nextInt(4) + 1);
 	}
 
 	/**
