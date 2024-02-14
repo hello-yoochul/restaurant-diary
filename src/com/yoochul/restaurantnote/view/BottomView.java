@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import com.yoochul.restaurantnote.model.Restaurant;
+import com.yoochul.restaurantnote.util.ColorManager;
 
 public class BottomView extends ViewPart {
 	public static final String ID = "com.yoochul.restaurantnote.view.bottomview";
@@ -25,17 +26,20 @@ public class BottomView extends ViewPart {
         // 스크롤이 가능하도록 ScrolledComposite 생성
         ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
         scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        scrolledComposite.setBackground(ColorManager.WHITE);
         
         // ScrolledComposite 안에 Text를 직접 배치하는 대신 inner Composite를 사용하여, 스크롤 동작이 더욱 정확하고 유연해집니다. 
         // 또한 inner Composite를 사용하면 필요에 따라 유연하게 다른 위젯도 추가할 수 있다.
         Composite innerComposite = new Composite(scrolledComposite, SWT.NONE);
         innerComposite.setLayout(new GridLayout());
         innerComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        innerComposite.setBackground(ColorManager.WHITE);
 
         // 스크롤이 가능한 Text 생성
         selectedRestaurantMenu = new Text(innerComposite, SWT.WRAP | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY);
         selectedRestaurantMenu.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
+        selectedRestaurantMenu.setBackground(ColorManager.WHITE);
+        
         // Text에 Scrollable 설정
         scrolledComposite.setContent(innerComposite);
         scrolledComposite.setExpandVertical(true);

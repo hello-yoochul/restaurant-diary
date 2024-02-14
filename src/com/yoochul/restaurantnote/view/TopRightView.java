@@ -25,6 +25,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 import com.yoochul.restaurantnote.model.Restaurant;
+import com.yoochul.restaurantnote.util.ColorManager;
 import com.yoochul.restaurantnote.util.StringUtil;
 
 public class TopRightView extends ViewPart {
@@ -39,6 +40,7 @@ public class TopRightView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		parentComposite = new Composite(parent, SWT.NONE);
 		parentComposite.setLayout(new FillLayout(SWT.VERTICAL));
+		parentComposite.setBackground(ColorManager.BLUE);
         createTop(parentComposite);
         createBottom(parentComposite);
 	}
@@ -46,11 +48,12 @@ public class TopRightView extends ViewPart {
 	private void createTop(Composite parent) {
 		topComposite = new Composite(parent, SWT.BORDER);
 		topComposite.setLayout(new GridLayout()); // 수평 방향으로 채워지도록 설정
+		topComposite.setBackground(ColorManager.WHITE);
 		
 		topLabel = new CLabel(topComposite, SWT.CENTER | SWT.UNDERLINE_SINGLE);
 		topLabel.setText("                                                                                                           ");
 		topLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
-		topLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		topLabel.setForeground(ColorManager.BLUE);
 
 	    topLabel.addMouseListener(new MouseListener() {
 	        @Override
@@ -73,6 +76,7 @@ public class TopRightView extends ViewPart {
 	private void createBottom(Composite parent) {
 		bottomScrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 	    bottomScrolledComposite.setLayout(new FillLayout());
+	    bottomScrolledComposite.setBackground(ColorManager.WHITE);
 	}
 	
 	public void updateUI(Restaurant selected) {
@@ -110,6 +114,7 @@ public class TopRightView extends ViewPart {
 		
 		 // 내부 Composite 생성
 	    Composite composite = new Composite(bottomScrolledComposite, SWT.NONE);
+	    composite.setBackground(ColorManager.WHITE);
 	    
 	    // GridLayout 설정
 	    GridLayout layout = new GridLayout(IMAGE_NUMBER_PER_LINE, true);
@@ -138,6 +143,7 @@ public class TopRightView extends ViewPart {
 		                
 		                Label label = new Label(composite, SWT.NONE);
 		                label.setImage(scaledImage);
+		                label.setBackground(ColorManager.WHITE);
 		                
 		                GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		                gridData.widthHint = 150; // 이미지의 폭
