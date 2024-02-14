@@ -22,8 +22,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // TODO: 앱 실행시 창 중앙에 배치하기 
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(WINDOW_WIDTH, WINDOW_HEIGHT));
-//        configurer.setInitialSize(new Point(Display.getDefault().getBounds().width, Display.getDefault().getBounds().height));
         configurer.setShowCoolBar(false);
         configurer.setShowStatusLine(false);
+        try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 }
