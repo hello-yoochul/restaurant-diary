@@ -40,7 +40,6 @@ public class TopRightView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		parentComposite = new Composite(parent, SWT.NONE);
 		parentComposite.setLayout(new FillLayout(SWT.VERTICAL));
-		parentComposite.setBackground(ColorManager.BLUE);
         createTop(parentComposite);
         createBottom(parentComposite);
 	}
