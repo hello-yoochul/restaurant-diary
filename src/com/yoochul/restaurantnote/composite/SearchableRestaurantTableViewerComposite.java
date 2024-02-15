@@ -64,7 +64,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
 
 	private void createFoodTypeComboBox() {
 		foodTypeCombo = new Combo(this, SWT.READ_ONLY);
-    	foodTypeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+    	foodTypeCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
     	foodTypeCombo.setItems(FoodType.getNames());
     	foodTypeCombo.select(0);
     	
@@ -87,6 +87,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
             @Override
             public void modifyText(ModifyEvent e) {
                 updateTable();
+        		topLeftView.propagateSelection(null);
             }
         });
 	}
@@ -155,6 +156,12 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
         	this.searchText = searchText;
         }
 
+        /**
+         * 검색어와 음식점 타입에 따라 검색이 가능하여야 한다.
+         * 음식타입은 항상 포함되는데 반해 검색어는 주어지지 않을 수 있으므로 대비한다. 
+         * 검색어 O, 음식타입 
+         * 검색어 O, 
+         */
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if (!(element instanceof Restaurant)) return false;
@@ -164,7 +171,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
 			
 			Restaurant restaurant = (Restaurant) element;
 			
-			// 식당 타입이 주어졌을때, 
+			// 음식점 타입이 주어졌을때, 
 			if( selectedFoodType != null && !selectedFoodType.equals(FoodType.ALL) ) {
 				if(StringUtil.isNotBlank(searchString)){ // 검색어가 있다면, 식당 타입과 검색어로 식당 출력 여부 결정
 					return restaurant.getType().equals(selectedFoodType) && searchStringIncluded(restaurant, searchString);
@@ -173,12 +180,12 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
 				}
 			}
 			
-			// 모든 식당 타입들 중 검색어가 포함된 식당 찾기 
+			// 검색어가 주어졌을때,  
 			if(StringUtil.isNotBlank(searchString)) {
 				return searchStringIncluded(restaurant, searchString);
 			}
 			
-			return true; // ALL 음식 타입이며 검색어가 없을때는 항상 식당 출력
+			return true; // 검색어가 없을때는 항상 식당 출력
 		}
 		
 		/**
