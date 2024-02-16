@@ -3,6 +3,7 @@ package com.yoochul.restaurantnote.composite;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -106,7 +107,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
         
         createTableColumns(table);     
         
-        tableViewer.setContentProvider(new RestaurantTableContentProvider());
+        tableViewer.setContentProvider(new ArrayContentProvider());
         tableViewer.setLabelProvider(new RestaurantTableLabelProvider());
         tableViewer.setInput(database.getData());
         tableViewer.setFilters(new ViewerFilter[] { new RestaurantSearchFilter(foodTypeCombo, searchText)});
