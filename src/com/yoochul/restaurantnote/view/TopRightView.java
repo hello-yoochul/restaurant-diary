@@ -7,6 +7,8 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -18,8 +20,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -42,6 +45,7 @@ public class TopRightView extends ViewPart {
 		parentComposite.setLayout(new FillLayout(SWT.VERTICAL));
         createTop(parentComposite);
         createBottom(parentComposite);
+        addListenerForTableSelection();
 	}
 
 	private void createTop(Composite parent) {
@@ -62,12 +66,10 @@ public class TopRightView extends ViewPart {
 
 	        @Override
 	        public void mouseDown(MouseEvent e) {
-	            // 마우스 클릭 이벤트 처리
 	        }
 
 	        @Override
 	        public void mouseUp(MouseEvent e) {
-	            // 마우스 업 이벤트 처리
 	        }
 	    });
 	}
@@ -78,29 +80,31 @@ public class TopRightView extends ViewPart {
 	    bottomScrolledComposite.setBackground(ColorManager.WHITE);
 	}
 	
-	public void updateUI(Restaurant selected) {
-		if (selected == null) {
-			resetUI();
-			return;
-		}
-		
-		if (selected.getPicturesLocation() == null) {
-			resetBottomScrolledComposite();
-			return;
-		}
-		
-		setMapUrlOnTop(selected);
-		setImage(selected.getPicturesLocation());
+	private void addListenerForTableSelection() {
+		getViewSite().getPage().addSelectionListener(new ISelectionListener() {
+            @Override
+            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+                if (part instanceof TopLeftView) {
+                	if (selection.isEmpty()) { // 테이블에 selection이 없어질때 UI 리셋
+                		resetUI();
+                    } else {
+                    	Object obj = ((IStructuredSelection) selection).getFirstElement();
+                    	if (obj instanceof Restaurant) {
+                    		Restaurant selected = (Restaurant) obj;
+                    		setMapUrlOnTop(selected);
+                    		setImage(selected.getPicturesLocation());
+                    	}
+                    }
+                }
+            }
+        });
 	}
 	
 	private void resetUI() {
-		topLabel.setText("");
-		resetBottomScrolledComposite();
+		topLabel.setText("                                                                                                           ");
+		bottomScrolledComposite.setContent(null);
 	}
 	
-	private void resetBottomScrolledComposite() {
-		bottomScrolledComposite.setContent(new Composite(parentComposite, SWT.NONE));
-	}
 	
 	private void setMapUrlOnTop(Restaurant restaurant) {
 		if (restaurant == null) return;

@@ -1,11 +1,15 @@
 package com.yoochul.restaurantnote.view;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import com.yoochul.restaurantnote.model.Restaurant;
@@ -45,19 +49,31 @@ public class BottomView extends ViewPart {
         scrolledComposite.setExpandVertical(true);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setMinSize(innerComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        
+        addListenerForTableSelection();
 	}
 
 	@Override
 	public void setFocus() {
 	}
-
-	public void updateUI(Restaurant selected) {
-		if(selected == null || selected.getMenu() == null) {
-			resetUI();
-			return;
-		}
-		
-		selectedRestaurantMenu.setText(selected.getMenu().toString() + "\n" + selected.getMenu().toString() + "\n" + selected.getMenu().toString());
+	
+	private void addListenerForTableSelection() {
+		getViewSite().getPage().addSelectionListener(new ISelectionListener() {
+            @Override
+            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+                if (part instanceof TopLeftView) {
+                	if (selection.isEmpty()) { // 테이블에 selection이 없어질때 UI 리셋
+                		resetUI();
+                    } else {
+                    	Object obj = ((IStructuredSelection) selection).getFirstElement();
+	                    if (obj instanceof Restaurant) {
+	                        Restaurant selected = (Restaurant) obj;
+	                        selectedRestaurantMenu.setText(selected.getMenu().toString() + "\n" + selected.getMenu().toString() + "\n" + selected.getMenu().toString());
+	                    }
+                    }
+                }
+            }
+        });
 	}
 	
 	private void resetUI() {

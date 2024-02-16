@@ -74,7 +74,6 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
             public void widgetSelected(SelectionEvent e) {
                 topLeftView.syncFoodType(foodTypeCombo.getSelectionIndex());
 				updateTable();
-				topLeftView.propagateSelection(null);
             }
         });
 	}
@@ -88,7 +87,6 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
             @Override
             public void modifyText(ModifyEvent e) {
                 updateTable();
-        		topLeftView.propagateSelection(null);
             }
         });
 	}
@@ -122,19 +120,7 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
             };
         });
         
-        tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				
-				if (!selection.isEmpty()) {
-					Restaurant selected = (Restaurant) selection.getFirstElement();
-                    // 선택된 항목의 데이터를 아래 Composite의 Label에 설정
-                    //selectedDataLabel.setText("Selected Data: " + selected.getName());
-					topLeftView.propagateSelection(selected);
-				}
-			}
-		});
+        topLeftView.getSite().setSelectionProvider(tableViewer);
 	}
 
 	private void createTableColumns(Table table) {
@@ -257,7 +243,6 @@ public class SearchableRestaurantTableViewerComposite extends Composite {
             	database.delete(selectedRestaurants);
             	
             	updateTable();
-            	topLeftView.propagateSelection(null);
             }
         });
 	}	

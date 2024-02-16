@@ -41,7 +41,6 @@ public class RestaurantCategorySelection extends Composite {
 				public void widgetSelected(SelectionEvent e) {
 					topLeftView.syncFoodType(getSelectedIndex());
 					topLeftView.refreshTable();
-					topLeftView.propagateSelection(null);
 				}
 			});
 			radioButtons[foodType.ordinal()] = button;
